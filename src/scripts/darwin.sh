@@ -36,16 +36,16 @@ install_extension() {
   extension=$1
   extension_name="$(echo "$extension" | cut -d'-' -f 1)"
   sudo sed -i "/$extension_name/d" "$ini_file"
-  sudo rm -rf /etc/php/"$version"/cli/conf.d/*"$extension_name"* >/dev/null 2>&1
-  sudo rm -rf "$ext_dir"/"$extension_name".so >/dev/null 2>&1
-  sudo pecl install -f "$extension" >/dev/null 2>&1
+  sudo rm -rf /etc/php/"$version"/cli/conf.d/*"$extension_name"* 
+  sudo rm -rf "$ext_dir"/"$extension_name".so 
+  sudo pecl install -f "$extension" 
 }
 
 # Function to remove extensions
 remove_extension() {
   extension=$1
   sudo sed -i '' "/$1/d" "$ini_file"
-  sudo rm -rf "$ext_dir"/"$1".so >/dev/null 2>&1
+  sudo rm -rf "$ext_dir"/"$1".so 
 }
 
 # Function to setup a remote tool
@@ -53,7 +53,7 @@ add_tool() {
   url=$1
   tool=$2
   if [ "$tool" = "composer" ]; then
-    brew install composer >/dev/null 2>&1
+    brew install composer 
     composer -q global config process-timeout 0
     add_log "$tick" "$tool" "Added"
   else
@@ -69,9 +69,9 @@ add_tool() {
     fi
   fi
   if [ "$tool" = "phive" ]; then
-    add_extension curl >/dev/null 2>&1
-    add_extension mbstring >/dev/null 2>&1
-    add_extension xml >/dev/null 2>&1
+    add_extension curl 
+    add_extension mbstring 
+    add_extension xml 
   fi
 }
 
@@ -80,26 +80,26 @@ add_composer_tool() {
   release=$2
   prefix=$3
   (
-    composer global require "$prefix$release" >/dev/null 2>&1 && \
+    composer global require "$prefix$release"  && \
     sudo ln -sf "$(composer -q global config home)"/vendor/bin/"$tool" /usr/local/bin/"$tool" && \
     add_log "$tick" "$tool" "Added"
   ) || add_log "$cross" "$tool" "Could not setup $tool"
 }
 
 add_pecl() {
-  sudo pear config-set php_ini "$ini_file" >/dev/null 2>&1
-  sudo pear config-set auto_discover 1 >/dev/null 2>&1
-  sudo pear channel-update pear.php.net >/dev/null 2>&1
-  sudo pecl channel-update pecl.php.net >/dev/null 2>&1
+  sudo pear config-set php_ini "$ini_file" 
+  sudo pear config-set auto_discover 1 
+  sudo pear channel-update pear.php.net 
+  sudo pecl channel-update pecl.php.net 
   add_log "$tick" "PECL" "Added"
 }
 
 # Function to setup PHP and composer
 setup_php_and_composer() {
   export HOMEBREW_NO_INSTALL_CLEANUP=TRUE
-  brew tap shivammathur/homebrew-php >/dev/null 2>&1
-  brew install shivammathur/php/php@"$version" >/dev/null 2>&1
-  brew link --force --overwrite php@"$version" >/dev/null 2>&1
+  brew tap shivammathur/homebrew-php 
+  brew install shivammathur/php/php@"$version" 
+  brew link --force --overwrite php@"$version" 
 }
 
 # Variables

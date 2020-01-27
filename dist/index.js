@@ -1236,10 +1236,10 @@ function suppressOutput(os_version) {
     return __awaiter(this, void 0, void 0, function* () {
         switch (os_version) {
             case 'win32':
-                return ' >$null 2>&1';
+                return ' ';
             case 'linux':
             case 'darwin':
-                return ' >/dev/null 2>&1';
+                return ' ';
             default:
                 return yield log('Platform ' + os_version + ' is not supported', os_version, 'error');
         }

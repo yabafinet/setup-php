@@ -13,7 +13,7 @@ add_log() {
 # Function to update php ppa
 update_ppa() {
   if [ "$ppa_updated" = "false" ]; then
-    find /etc/apt/sources.list.d -type f -name 'ondrej-ubuntu-php*.list' -exec sudo DEBIAN_FRONTEND=noninteractive apt-get update -o Dir::Etc::sourcelist="{}" ';' >/dev/null 2>&1
+    find /etc/apt/sources.list.d -type f -name 'ondrej-ubuntu-php*.list' -exec sudo DEBIAN_FRONTEND=noninteractive apt-get update -o Dir::Etc::sourcelist="{}" ';' 
     ppa_updated="true"
   fi
 }
@@ -22,8 +22,8 @@ update_ppa() {
 install_phalcon() {
   extension=$1
   version=$2
-  (sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "php$version-$extension" >/dev/null 2>&1 && add_log "$tick" "$extension" "Installed and enabled") ||
-  (update_ppa && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "php$version-$extension" >/dev/null 2>&1 && add_log "$tick" "$extension" "Installed and enabled") ||
+  (sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "php$version-$extension"  && add_log "$tick" "$extension" "Installed and enabled") ||
+  (update_ppa && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "php$version-$extension"  && add_log "$tick" "$extension" "Installed and enabled") ||
   add_log "$cross" "$extension" "Could not install $extension on PHP $semver"
 }
 
@@ -52,8 +52,8 @@ if [ "$extension_major_version" = "4" ]; then
       echo "extension=phalcon" >>"$ini_file"
       phalcon_version=$(php -r "echo phpversion('phalcon');" | cut -d'.' -f 1)
       if [ "$phalcon_version" != "$extension_major_version" ]; then
-        remove_extension "psr" >/dev/null 2>&1
-        remove_extension "phalcon" >/dev/null 2>&1
+        remove_extension "psr" 
+        remove_extension "phalcon" 
         install_phalcon "$1" "$2"
       else
         add_log "$tick" "$1" "Enabled"
@@ -71,7 +71,7 @@ if [ "$extension_major_version" = "3" ]; then
     echo "extension=phalcon" >>"$ini_file"
     phalcon_version=$(php -r "echo phpversion('phalcon');" | cut -d'.' -f 1)
     if [ "$phalcon_version" != "$extension_major_version" ]; then
-      remove_extension "phalcon" >/dev/null 2>&1
+      remove_extension "phalcon" 
       install_phalcon "$1" "$2"
     else
       add_log "$tick" "$1" "Enabled"
